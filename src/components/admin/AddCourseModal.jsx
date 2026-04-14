@@ -51,7 +51,7 @@ export default function AddCourseModal({ onClose, onAdded }) {
         const processZip = zipCallbackHolder.__processZip
         if (!processZip) throw new Error('No ZIP selected')
 
-        const url = await processZip()
+        const url = await processZip({ title: form.title, subtitle: form.subtitle, type: form.type })
         // Edge Function already inserted the course; just close
         if (url) {
           onAdded(null) // trigger refetch
