@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-const FILTERS = ['all', 'Environnement', 'Security', 'Genrer']
+const FILTERS = ['all', 'Environnement', 'Security', 'Gender']
 
 export default function FilterPills({ active, onChange }) {
   const { t } = useTranslation()

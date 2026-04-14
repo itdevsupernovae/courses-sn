@@ -8,7 +8,7 @@ import CongratsModal from './CongratsModal'
 const TYPE_COLORS = {
   Environnement: 'bg-green-50 text-green-700 border-green-200',
   Security: 'bg-blue-50 text-blue-700 border-blue-200',
-  Genrer: 'bg-purple-50 text-purple-700 border-purple-200',
+  Gender: 'bg-purple-50 text-purple-700 border-purple-200',
 }
 
 export default function CourseCard({ course, getCourseStatus, onStart, onFinish }) {

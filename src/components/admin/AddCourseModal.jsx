@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 import ZipUploader from './ZipUploader'
 
-const TYPES = ['Environnement', 'Security', 'Genrer']
+const TYPES = ['Environnement', 'Security', 'Gender']
 
 export default function AddCourseModal({ onClose, onAdded }) {
   const { t } = useTranslation()

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 
-const TYPES = ['Environnement', 'Security', 'Genrer']
+const TYPES = ['Environnement', 'Security', 'Gender']
 
 export default function EditCourseModal({ course, onSave, onClose }) {
   const { t } = useTranslation()
