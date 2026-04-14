@@ -64,7 +64,7 @@ serve(async (req) => {
     }
 
     const body: RequestBody = await req.json()
-    const { files, folderName, title, subtitle, type, entryPoint = 'index.html' } = body
+    const { files, folderName, title, subtitle, type, entryPoint = 'content/' } = body
 
     const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN')!
     const GITHUB_OWNER = Deno.env.get('GITHUB_OWNER')!
