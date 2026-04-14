@@ -51,10 +51,19 @@ export default function AddCourseModal({ onClose, onAdded }) {
         const processZip = zipCallbackHolder.__processZip
         if (!processZip) throw new Error('No ZIP selected')
 
-        const url = await processZip({ title: form.title, subtitle: form.subtitle, type: form.type })
-        // Edge Function already inserted the course; just close
-        if (url) {
-          onAdded(null) // trigger refetch
+        const publicUrl = await processZip()
+        if (publicUrl) {
+          const { data, error } = await supabase.from('courses').insert({
+            title: form.title,
+            subtitle: form.subtitle || null,
+            type: form.type,
+            source_type: 'zip',
+            url: publicUrl,
+            created_by: user.id,
+          }).select().single()
+
+          if (error) throw error
+          onAdded(data)
           onClose()
         }
       }

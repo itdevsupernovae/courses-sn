@@ -1,15 +1,41 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Upload, FileArchive, CheckCircle2 } from 'lucide-react'
+import { Upload, FileArchive } from 'lucide-react'
 import JSZip from 'jszip'
 import { supabase } from '../../lib/supabase'
 import toast from 'react-hot-toast'
+
+function getMimeType(filename) {
+  const ext = filename.split('.').pop().toLowerCase()
+  const map = {
+    html: 'text/html',
+    css: 'text/css',
+    js: 'application/javascript',
+    json: 'application/json',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    gif: 'image/gif',
+    svg: 'image/svg+xml',
+    woff: 'font/woff',
+    woff2: 'font/woff2',
+    ttf: 'font/ttf',
+    otf: 'font/otf',
+    mp4: 'video/mp4',
+    mp3: 'audio/mpeg',
+    webp: 'image/webp',
+    xml: 'application/xml',
+    txt: 'text/plain',
+  }
+  return map[ext] || 'application/octet-stream'
+}
 
 export default function ZipUploader({ folderName, onSuccess }) {
   const { t } = useTranslation()
   const [dragging, setDragging] = useState(false)
   const [file, setFile] = useState(null)
   const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState({ done: 0, total: 0 })
   const inputRef = useRef(null)
 
   function handleDrop(e) {
@@ -24,56 +50,48 @@ export default function ZipUploader({ folderName, onSuccess }) {
     if (selected?.name.endsWith('.zip')) setFile(selected)
   }
 
-  async function processZip({ title, subtitle, type, entryPoint = 'content/index.html' } = {}) {
+  async function processZip() {
     if (!file || !folderName) return null
 
     setUploading(true)
+    setProgress({ done: 0, total: 0 })
+
     try {
       const arrayBuffer = await file.arrayBuffer()
       const zip = await JSZip.loadAsync(arrayBuffer)
 
-      const fileEntries = []
-      const promises = []
-
-      zip.forEach((relativePath, zipEntry) => {
-        if (!zipEntry.dir) {
-          promises.push(
-            zipEntry.async('base64').then(content => {
-              fileEntries.push({ path: relativePath, content })
-            })
-          )
-        }
+      // Collect all file entries
+      const entries = []
+      zip.forEach((relativePath, entry) => {
+        if (!entry.dir) entries.push({ relativePath, entry })
       })
-      await Promise.all(promises)
 
-      // Call Supabase Edge Function
-      const { data: { session } } = await supabase.auth.getSession()
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      setProgress({ done: 0, total: entries.length })
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/push-course-to-github`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ files: fileEntries, folderName, title, subtitle, type, entryPoint }),
-        }
-      )
+      // Upload each file to Supabase Storage
+      for (const { relativePath, entry } of entries) {
+        const data = await entry.async('uint8array')
+        const blob = new Blob([data], { type: getMimeType(relativePath) })
+        const storagePath = `${folderName}/${relativePath}`
 
-      if (!response.ok) {
-        const text = await response.text()
-        console.error('[ZipUploader] Edge Function error:', response.status, text)
-        let errMsg = 'Upload failed'
-        try { errMsg = JSON.parse(text).error || text } catch { errMsg = text }
-        throw new Error(`${response.status}: ${errMsg}`)
+        const { error } = await supabase.storage
+          .from('courses')
+          .upload(storagePath, blob, {
+            contentType: getMimeType(relativePath),
+            upsert: true,
+          })
+
+        if (error) throw new Error(`Erreur upload ${relativePath}: ${error.message}`)
+        setProgress(p => ({ ...p, done: p.done + 1 }))
       }
 
-      const result = await response.json()
-      toast.success(t('admin.githubToast'), { duration: 6000 })
+      // Get public URL of entry point
+      const { data: urlData } = supabase.storage
+        .from('courses')
+        .getPublicUrl(`${folderName}/content/index.html`)
+
       setUploading(false)
-      return result.url
+      return urlData.publicUrl
     } catch (err) {
       toast.error(err.message)
       setUploading(false)
@@ -81,7 +99,7 @@ export default function ZipUploader({ folderName, onSuccess }) {
     }
   }
 
-  // Expose processZip via ref-like callback
+  // Expose processZip to parent
   if (onSuccess) {
     onSuccess.__processZip = processZip
   }
@@ -89,19 +107,36 @@ export default function ZipUploader({ folderName, onSuccess }) {
   return (
     <div className="flex flex-col gap-3">
       <div
-        onClick={() => inputRef.current?.click()}
+        onClick={() => !uploading && inputRef.current?.click()}
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-200 ${
-          dragging
-            ? 'border-brand-orange bg-brand-cream-light'
+        className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center gap-3 transition-all duration-200 ${
+          uploading
+            ? 'border-brand-orange/40 bg-brand-cream-light cursor-wait'
+            : dragging
+            ? 'border-brand-orange bg-brand-cream-light cursor-copy'
             : file
-            ? 'border-green-400 bg-green-50'
-            : 'border-brand-border hover:border-brand-orange/50 hover:bg-brand-light'
+            ? 'border-green-400 bg-green-50 cursor-pointer'
+            : 'border-brand-border hover:border-brand-orange/50 hover:bg-brand-light cursor-pointer'
         }`}
       >
-        {file ? (
+        {uploading ? (
+          <>
+            <div className="w-8 h-8 border-2 border-brand-orange/30 border-t-brand-orange rounded-full animate-spin" />
+            <p className="text-sm font-medium text-brand-orange">
+              {t('admin.uploadingZip')} {progress.done}/{progress.total}
+            </p>
+            {progress.total > 0 && (
+              <div className="w-full max-w-xs bg-brand-border rounded-full h-1.5">
+                <div
+                  className="bg-brand-orange h-1.5 rounded-full transition-all duration-200"
+                  style={{ width: `${(progress.done / progress.total) * 100}%` }}
+                />
+              </div>
+            )}
+          </>
+        ) : file ? (
           <>
             <FileArchive size={28} className="text-green-600" />
             <p className="text-sm font-medium text-green-700">{file.name}</p>
@@ -125,10 +160,6 @@ export default function ZipUploader({ folderName, onSuccess }) {
         className="hidden"
         onChange={handleFileChange}
       />
-
-      {uploading && (
-        <p className="text-xs text-brand-muted text-center animate-pulse">{t('admin.uploadingZip')}</p>
-      )}
     </div>
   )
 }
