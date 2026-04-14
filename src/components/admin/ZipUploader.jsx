@@ -24,7 +24,7 @@ export default function ZipUploader({ folderName, onSuccess }) {
     if (selected?.name.endsWith('.zip')) setFile(selected)
   }
 
-  async function processZip({ title, subtitle, type, entryPoint = 'content/' } = {}) {
+  async function processZip({ title, subtitle, type, entryPoint = 'content/index.html' } = {}) {
     if (!file || !folderName) return null
 
     setUploading(true)
