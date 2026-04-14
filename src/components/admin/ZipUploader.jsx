@@ -63,8 +63,11 @@ export default function ZipUploader({ folderName, onSuccess }) {
       )
 
       if (!response.ok) {
-        const err = await response.json()
-        throw new Error(err.error || 'Upload failed')
+        const text = await response.text()
+        console.error('[ZipUploader] Edge Function error:', response.status, text)
+        let errMsg = 'Upload failed'
+        try { errMsg = JSON.parse(text).error || text } catch { errMsg = text }
+        throw new Error(`${response.status}: ${errMsg}`)
       }
 
       const result = await response.json()
