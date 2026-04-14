@@ -17,6 +17,7 @@ interface RequestBody {
   title: string
   subtitle?: string
   type: string
+  entryPoint?: string
 }
 
 serve(async (req) => {
@@ -63,7 +64,7 @@ serve(async (req) => {
     }
 
     const body: RequestBody = await req.json()
-    const { files, folderName, title, subtitle, type } = body
+    const { files, folderName, title, subtitle, type, entryPoint = 'index.html' } = body
 
     const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN')!
     const GITHUB_OWNER = Deno.env.get('GITHUB_OWNER')!
@@ -133,7 +134,7 @@ serve(async (req) => {
     })
 
     // 7. Insert course into DB
-    const courseUrl = `/courses/${folderName}/index.html`
+    const courseUrl = `/courses/${folderName}/${entryPoint}`
     const { data: course, error: insertError } = await supabaseAdmin
       .from('courses')
       .insert({

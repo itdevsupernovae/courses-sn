@@ -17,6 +17,7 @@ export default function AddCourseModal({ onClose, onAdded }) {
     type: 'Environnement',
     url: '',
     folderName: '',
+    entryPoint: 'index.html',
   })
   const [saving, setSaving] = useState(false)
   const zipProcessorRef = useRef(null)
@@ -51,7 +52,7 @@ export default function AddCourseModal({ onClose, onAdded }) {
         const processZip = zipCallbackHolder.__processZip
         if (!processZip) throw new Error('No ZIP selected')
 
-        const url = await processZip({ title: form.title, subtitle: form.subtitle, type: form.type })
+        const url = await processZip({ title: form.title, subtitle: form.subtitle, type: form.type, entryPoint: form.entryPoint })
         // Edge Function already inserted the course; just close
         if (url) {
           onAdded(null) // trigger refetch
@@ -153,6 +154,20 @@ export default function AddCourseModal({ onClose, onAdded }) {
                   required={sourceType === 'zip'}
                 />
                 <p className="text-xs text-brand-muted">{t('admin.folderNameHint')}</p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-brand-muted uppercase tracking-wider">
+                  Point d'entrée
+                </label>
+                <input
+                  className="input-field"
+                  value={form.entryPoint}
+                  onChange={set('entryPoint')}
+                  placeholder="index.html"
+                />
+                <p className="text-xs text-brand-muted">
+                  Chemin vers la page d'accueil du cours dans l'archive (ex: <code>index.html</code>, <code>content/</code>, <code>story.html</code>)
+                </p>
               </div>
               <ZipUploader
                 folderName={form.folderName}
