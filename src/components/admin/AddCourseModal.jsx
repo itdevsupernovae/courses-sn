@@ -17,7 +17,6 @@ export default function AddCourseModal({ onClose, onAdded }) {
     type: 'Environnement',
     url: '',
     folderName: '',
-    entryPoint: 'index.html',
   })
   const [saving, setSaving] = useState(false)
   const zipProcessorRef = useRef(null)
@@ -52,7 +51,7 @@ export default function AddCourseModal({ onClose, onAdded }) {
         const processZip = zipCallbackHolder.__processZip
         if (!processZip) throw new Error('No ZIP selected')
 
-        const url = await processZip({ title: form.title, subtitle: form.subtitle, type: form.type, entryPoint: form.entryPoint })
+        const url = await processZip({ title: form.title, subtitle: form.subtitle, type: form.type })
         // Edge Function already inserted the course; just close
         if (url) {
           onAdded(null) // trigger refetch
