@@ -1,0 +1,117 @@
+{
+  "nav": {
+    "adminPanel": "Panel Admin",
+    "lang": "EN"
+  },
+  "auth": {
+    "loginTitle": "Bienvenue",
+    "loginSubtitle": "Connectez-vous pour accéder aux formations",
+    "registerTitle": "Créer un compte",
+    "registerSubtitle": "Rejoignez la plateforme de formation Super-Novae",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "switchToRegister": "Pas encore de compte ? S'inscrire",
+    "switchToLogin": "Déjà un compte ? Se connecter",
+    "logout": "Se déconnecter",
+    "loginError": "Email ou mot de passe incorrect",
+    "registerError": "Erreur lors de l'inscription",
+    "firstNamePlaceholder": "Marie",
+    "lastNamePlaceholder": "Dupont",
+    "emailPlaceholder": "marie.dupont@super-novae.org",
+    "passwordPlaceholder": "••••••••"
+  },
+  "courses": {
+    "title": "Nos formations",
+    "subtitle": "Développez vos compétences avec nos parcours de formation",
+    "startCourse": "Commencer le cours",
+    "finishCourse": "J'ai terminé le cours",
+    "completed": "Terminé",
+    "inProgress": "En cours",
+    "notStarted": "Non commencé",
+    "noCoursesFound": "Aucun cours trouvé pour ce filtre.",
+    "filters": {
+      "all": "Tous",
+      "Environnement": "Environnement",
+      "Security": "Sécurité",
+      "Genrer": "Genre"
+    }
+  },
+  "startModal": {
+    "title": "C'est parti !",
+    "body": "Le cours va s'ouvrir dans un nouvel onglet. Lorsque vous avez terminé, revenez ici et cliquez sur **« J'ai terminé le cours »** pour valider votre formation et obtenir votre diplôme.",
+    "cta": "J'ai compris, démarrer"
+  },
+  "congrats": {
+    "title": "Félicitations !",
+    "body": "Vous avez complété la formation avec succès. Téléchargez votre diplôme ci-dessous.",
+    "downloadPdf": "Télécharger mon diplôme",
+    "close": "Fermer"
+  },
+  "diploma": {
+    "title": "Certificat de réussite",
+    "certifiedThat": "Ce certificat atteste que",
+    "hasCompleted": "a complété avec succès la formation",
+    "completedOn": "Complété le",
+    "issuedBy": "Délivré par Super-Novae"
+  },
+  "admin": {
+    "title": "Panel Administration",
+    "courses": "Gestion des cours",
+    "users": "Suivi utilisateurs",
+    "addCourse": "Ajouter un cours",
+    "editCourse": "Modifier le cours",
+    "deleteCourse": "Supprimer",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce cours ?",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "courseTitle": "Titre",
+    "courseSubtitle": "Sous-titre",
+    "courseType": "Type de cours",
+    "sourceType": "Type de source",
+    "sourceLink": "Lien externe",
+    "sourceZip": "Archive ZIP",
+    "courseUrl": "URL du cours",
+    "urlPlaceholder": "https://...",
+    "uploadZip": "Déposer ou cliquer pour uploader un fichier ZIP",
+    "uploadZipHint": "Archive ZIP contenant un fichier index.html",
+    "table": {
+      "title": "Titre",
+      "type": "Type",
+      "source": "Source",
+      "createdAt": "Créé le",
+      "actions": "Actions",
+      "user": "Utilisateur",
+      "email": "Email",
+      "course": "Formation",
+      "startedAt": "Démarré le",
+      "finishedAt": "Terminé le",
+      "status": "Statut"
+    },
+    "status": {
+      "completed": "Terminé",
+      "inProgress": "En cours",
+      "notStarted": "Non commencé"
+    },
+    "noUsers": "Aucun utilisateur n'a encore démarré de cours.",
+    "noCourses": "Aucun cours créé pour l'instant.",
+    "githubToast": "Le cours ZIP a été envoyé à GitHub. Il sera accessible dans 30 à 60 secondes.",
+    "uploadingZip": "Envoi en cours...",
+    "saving": "Enregistrement...",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "folderName": "Nom du dossier",
+    "folderNamePlaceholder": "Cours_1",
+    "folderNameHint": "Nom du dossier dans /public/courses/ (ex: Cours_1)"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "yes": "Oui",
+    "no": "Non",
+    "close": "Fermer"
+  }
+}

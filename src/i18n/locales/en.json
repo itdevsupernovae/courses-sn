@@ -1,0 +1,117 @@
+{
+  "nav": {
+    "adminPanel": "Admin Panel",
+    "lang": "FR"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to access your training courses",
+    "registerTitle": "Create an account",
+    "registerSubtitle": "Join the Super-Novae learning platform",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email address",
+    "password": "Password",
+    "login": "Sign in",
+    "register": "Create account",
+    "switchToRegister": "No account yet? Sign up",
+    "switchToLogin": "Already have an account? Sign in",
+    "logout": "Sign out",
+    "loginError": "Incorrect email or password",
+    "registerError": "Error during registration",
+    "firstNamePlaceholder": "Marie",
+    "lastNamePlaceholder": "Dupont",
+    "emailPlaceholder": "marie.dupont@super-novae.org",
+    "passwordPlaceholder": "••••••••"
+  },
+  "courses": {
+    "title": "Our courses",
+    "subtitle": "Develop your skills with our training programs",
+    "startCourse": "Start course",
+    "finishCourse": "I've completed this course",
+    "completed": "Completed",
+    "inProgress": "In progress",
+    "notStarted": "Not started",
+    "noCoursesFound": "No courses found for this filter.",
+    "filters": {
+      "all": "All",
+      "Environnement": "Environment",
+      "Security": "Security",
+      "Genrer": "Gender"
+    }
+  },
+  "startModal": {
+    "title": "Let's go!",
+    "body": "The course will open in a new tab. When you're done, come back here and click **\"I've completed this course\"** to validate your training and get your certificate.",
+    "cta": "Got it, start course"
+  },
+  "congrats": {
+    "title": "Congratulations!",
+    "body": "You have successfully completed this training. Download your certificate below.",
+    "downloadPdf": "Download my certificate",
+    "close": "Close"
+  },
+  "diploma": {
+    "title": "Certificate of Completion",
+    "certifiedThat": "This is to certify that",
+    "hasCompleted": "has successfully completed the training",
+    "completedOn": "Completed on",
+    "issuedBy": "Issued by Super-Novae"
+  },
+  "admin": {
+    "title": "Administration Panel",
+    "courses": "Course Management",
+    "users": "User Progress",
+    "addCourse": "Add a course",
+    "editCourse": "Edit course",
+    "deleteCourse": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this course?",
+    "cancel": "Cancel",
+    "save": "Save",
+    "courseTitle": "Title",
+    "courseSubtitle": "Subtitle",
+    "courseType": "Course type",
+    "sourceType": "Source type",
+    "sourceLink": "External link",
+    "sourceZip": "ZIP archive",
+    "courseUrl": "Course URL",
+    "urlPlaceholder": "https://...",
+    "uploadZip": "Drop or click to upload a ZIP file",
+    "uploadZipHint": "ZIP archive containing an index.html file",
+    "table": {
+      "title": "Title",
+      "type": "Type",
+      "source": "Source",
+      "createdAt": "Created",
+      "actions": "Actions",
+      "user": "User",
+      "email": "Email",
+      "course": "Training",
+      "startedAt": "Started",
+      "finishedAt": "Finished",
+      "status": "Status"
+    },
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "notStarted": "Not started"
+    },
+    "noUsers": "No users have started a course yet.",
+    "noCourses": "No courses created yet.",
+    "githubToast": "The ZIP course was sent to GitHub. It will be accessible in 30-60 seconds.",
+    "uploadingZip": "Uploading...",
+    "saving": "Saving...",
+    "edit": "Edit",
+    "delete": "Delete",
+    "folderName": "Folder name",
+    "folderNamePlaceholder": "Course_1",
+    "folderNameHint": "Folder name inside /public/courses/ (e.g. Course_1)"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close"
+  }
+}
