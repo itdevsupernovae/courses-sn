@@ -70,14 +70,14 @@ export default function ZipUploader({ folderName, onSuccess }) {
 
       // Upload each file to Supabase Storage
       for (const { relativePath, entry } of entries) {
-        const data = await entry.async('uint8array')
-        const blob = new Blob([data], { type: getMimeType(relativePath) })
+        const data = await entry.async('arraybuffer')
+        const mimeType = getMimeType(relativePath)
         const storagePath = `${folderName}/${relativePath}`
 
         const { error } = await supabase.storage
           .from('courses')
-          .upload(storagePath, blob, {
-            contentType: getMimeType(relativePath),
+          .upload(storagePath, data, {
+            contentType: mimeType,
             upsert: true,
           })
 
