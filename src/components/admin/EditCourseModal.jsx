@@ -49,7 +49,7 @@ export default function EditCourseModal({ course, onSave, onClose }) {
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-medium text-brand-muted uppercase tracking-wider">{t('admin.courseType')}</label>
             <select className="input-field" value={form.type} onChange={set('type')}>
-              {TYPES.map(ty => <option key={ty} value={ty}>{ty}</option>)}
+              {TYPES.map(ty => <option key={ty} value={ty}>{t(`courses.filters.${ty}`, ty)}</option>)}
             </select>
           </div>
 
