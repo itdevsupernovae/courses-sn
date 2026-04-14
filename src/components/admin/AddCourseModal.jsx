@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X, Link2, Archive } from 'lucide-react'
+import { X, Link2, Archive, Loader2 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 import ZipUploader from './ZipUploader'
@@ -164,7 +164,8 @@ export default function AddCourseModal({ onClose, onAdded }) {
           {/* Actions */}
           <div className="flex gap-2 pt-2">
             <button type="button" onClick={onClose} className="btn-secondary flex-1">{t('admin.cancel')}</button>
-            <button type="submit" className="btn-primary flex-1" disabled={saving}>
+            <button type="submit" className="btn-primary flex-1 flex items-center justify-center gap-2" disabled={saving}>
+              {saving && <Loader2 size={15} className="animate-spin" />}
               {saving ? t('admin.saving') : t('admin.save')}
             </button>
           </div>

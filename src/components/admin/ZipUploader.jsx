@@ -10,6 +10,7 @@ export default function ZipUploader({ folderName, onSuccess }) {
   const [dragging, setDragging] = useState(false)
   const [file, setFile] = useState(null)
   const [uploading, setUploading] = useState(false)
+  const [phase, setPhase] = useState('') // 'extracting' | 'pushing'
   const [progress, setProgress] = useState({ done: 0, total: 0 })
   const inputRef = useRef(null)
 
@@ -29,6 +30,7 @@ export default function ZipUploader({ folderName, onSuccess }) {
     if (!file || !folderName) return null
 
     setUploading(true)
+    setPhase('extracting')
     setProgress({ done: 0, total: 0 })
 
     try {
@@ -50,6 +52,8 @@ export default function ZipUploader({ folderName, onSuccess }) {
         files.push({ path: relativePath, content })
         setProgress(p => ({ ...p, done: p.done + 1 }))
       }
+
+      setPhase('pushing')
 
       // Call Edge Function
       const { data: { session } } = await supabase.auth.getSession()
@@ -76,10 +80,12 @@ export default function ZipUploader({ folderName, onSuccess }) {
       if (!res.ok) throw new Error(result.error || 'Upload failed')
 
       setUploading(false)
+      setPhase('')
       return result.url
     } catch (err) {
       toast.error(err.message)
       setUploading(false)
+      setPhase('')
       return null
     }
   }
@@ -109,16 +115,29 @@ export default function ZipUploader({ folderName, onSuccess }) {
         {uploading ? (
           <>
             <div className="w-8 h-8 border-2 border-brand-orange/30 border-t-brand-orange rounded-full animate-spin" />
-            <p className="text-sm font-medium text-brand-orange">
-              {t('admin.uploadingZip')} {progress.done}/{progress.total}
-            </p>
-            {progress.total > 0 && (
-              <div className="w-full max-w-xs bg-brand-border rounded-full h-1.5">
-                <div
-                  className="bg-brand-orange h-1.5 rounded-full transition-all duration-200"
-                  style={{ width: `${(progress.done / progress.total) * 100}%` }}
-                />
-              </div>
+            {phase === 'extracting' ? (
+              <>
+                <p className="text-sm font-medium text-brand-orange">
+                  {t('admin.uploadingZip')} {progress.done}/{progress.total}
+                </p>
+                {progress.total > 0 && (
+                  <div className="w-full max-w-xs bg-brand-border rounded-full h-1.5">
+                    <div
+                      className="bg-brand-orange h-1.5 rounded-full transition-all duration-200"
+                      style={{ width: `${(progress.done / progress.total) * 100}%` }}
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-medium text-brand-orange">
+                  {t('admin.pushingToGithub')}
+                </p>
+                <div className="w-full max-w-xs bg-brand-border rounded-full h-1.5">
+                  <div className="bg-brand-orange h-1.5 rounded-full animate-pulse w-full" />
+                </div>
+              </>
             )}
           </>
         ) : file ? (
