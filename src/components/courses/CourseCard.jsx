@@ -32,9 +32,12 @@ export default function CourseCard({ course, getCourseStatus, onStart, onFinish 
 
   async function handleStart() {
     const hasSeenHint = localStorage.getItem('sn_start_hint_shown')
-    await onStart(course.id)
+    // Toujours ouvrir le cours, mais n'insérer en DB que la première fois
+    if (status === 'not_started') {
+      await onStart(course.id)
+    }
     openCourse()
-    if (!hasSeenHint) {
+    if (!hasSeenHint && status === 'not_started') {
       setShowStartModal(true)
     }
   }
@@ -100,7 +103,6 @@ export default function CourseCard({ course, getCourseStatus, onStart, onFinish 
           {/* Start button */}
           <button
             onClick={handleStart}
-            disabled={status !== 'not_started'}
             className="btn-primary w-full flex items-center justify-center gap-2 text-sm"
           >
             <PlayCircle size={15} />
