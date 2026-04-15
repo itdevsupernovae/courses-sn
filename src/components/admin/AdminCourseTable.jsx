@@ -1,12 +1,57 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pencil, Trash2, ExternalLink, Archive } from 'lucide-react'
+import { Pencil, Trash2, ExternalLink, Archive, Loader2 } from 'lucide-react'
 import EditCourseModal from './EditCourseModal'
+import { supabase } from '../../lib/supabase'
+import toast from 'react-hot-toast'
 
 export default function AdminCourseTable({ courses, loading, onDelete, onUpdate }) {
   const { t } = useTranslation()
   const [editCourse, setEditCourse] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+
+  async function handleDelete(course) {
+    setDeleting(true)
+    try {
+      if (course.source_type === 'zip') {
+        // Extract folderName from URL: /courses/{folderName}/content/index.html
+        const folderName = course.url?.split('/courses/')[1]?.split('/')[0]
+        if (!folderName) throw new Error('Impossible de déterminer le dossier GitHub')
+
+        const { data: { session } } = await supabase.auth.getSession()
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-course-from-github`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({ courseId: course.id, folderName }),
+          }
+        )
+        const result = await res.json()
+        if (!res.ok) throw new Error(result.error || 'Erreur lors de la suppression')
+
+        if (!result.githubSuccess) {
+          toast(t('admin.deleteGithubWarning'), { icon: '⚠️' })
+        }
+      } else {
+        await onDelete(course.id)
+        setConfirmDelete(null)
+        setDeleting(false)
+        return
+      }
+
+      onDelete(course.id)
+    } catch (err) {
+      toast.error(err.message)
+    } finally {
+      setConfirmDelete(null)
+      setDeleting(false)
+    }
+  }
 
   function formatDate(str) {
     if (!str) return '—'
@@ -96,13 +141,20 @@ export default function AdminCourseTable({ courses, loading, onDelete, onUpdate 
             <h3 className="font-display text-lg font-semibold text-brand-dark">{t('admin.deleteCourse')}</h3>
             <p className="text-sm text-brand-muted">{t('admin.deleteConfirm')}</p>
             <p className="text-sm font-medium text-brand-dark">« {confirmDelete.title} »</p>
+            {confirmDelete.source_type === 'zip' && (
+              <p className="text-xs text-brand-muted bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                {t('admin.deleteZipWarning')}
+              </p>
+            )}
             <div className="flex gap-2 mt-2">
-              <button onClick={() => setConfirmDelete(null)} className="btn-secondary flex-1">{t('admin.cancel')}</button>
+              <button onClick={() => setConfirmDelete(null)} disabled={deleting} className="btn-secondary flex-1">{t('admin.cancel')}</button>
               <button
-                onClick={() => { onDelete(confirmDelete.id); setConfirmDelete(null) }}
-                className="flex-1 bg-red-500 text-white font-medium px-5 py-2.5 rounded-lg text-sm hover:bg-red-600 transition-colors"
+                onClick={() => handleDelete(confirmDelete)}
+                disabled={deleting}
+                className="flex-1 bg-red-500 text-white font-medium px-5 py-2.5 rounded-lg text-sm hover:bg-red-600 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
               >
-                {t('admin.delete')}
+                {deleting && <Loader2 size={14} className="animate-spin" />}
+                {deleting ? t('admin.deleting') : t('admin.delete')}
               </button>
             </div>
           </div>
