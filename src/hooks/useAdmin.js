@@ -35,6 +35,30 @@ export function useAdminCourses() {
   return { courses, loading, refetch: fetch, deleteCourse, updateCourse }
 }
 
+export function useAdminUsers() {
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetch() {
+      setLoading(true)
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false })
+      setUsers(data || [])
+      setLoading(false)
+    }
+    fetch()
+  }, [])
+
+  function updateUserRole(id, newRole) {
+    setUsers(prev => prev.map(u => u.id === id ? { ...u, role: newRole } : u))
+  }
+
+  return { users, loading, updateUserRole }
+}
+
 export function useAdminUserProgress() {
   const [progress, setProgress] = useState([])
   const [loading, setLoading] = useState(true)

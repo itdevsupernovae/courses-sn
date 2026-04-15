@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS public.courses (
   id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   title        text NOT NULL,
   subtitle     text,
-  type         text NOT NULL CHECK (type IN ('Environnement', 'Security', 'Genrer')),
+  type         text NOT NULL CHECK (type IN ('Environnement', 'Security', 'Gender')),
   source_type  text NOT NULL CHECK (source_type IN ('link', 'zip')),
   url          text NOT NULL,
   github_path  text,

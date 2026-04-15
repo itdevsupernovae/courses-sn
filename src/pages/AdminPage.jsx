@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Plus, BookOpen, Users } from 'lucide-react'
+import { Plus, BookOpen, Users, UserCog } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { useAdminCourses, useAdminUserProgress } from '../hooks/useAdmin'
+import { useAdminCourses, useAdminUserProgress, useAdminUsers } from '../hooks/useAdmin'
 import AdminCourseTable from '../components/admin/AdminCourseTable'
 import AdminUserTable from '../components/admin/AdminUserTable'
+import AdminUserList from '../components/admin/AdminUserList'
 import AddCourseModal from '../components/admin/AddCourseModal'
 
-const TABS = ['courses', 'users']
+const TABS = ['courses', 'users', 'members']
 
 export default function AdminPage() {
   const { t } = useTranslation()
@@ -19,6 +20,7 @@ export default function AdminPage() {
 
   const { courses, loading: cLoading, refetch, deleteCourse, updateCourse } = useAdminCourses()
   const { progress, loading: pLoading } = useAdminUserProgress()
+  const { users, loading: uLoading, updateUserRole } = useAdminUsers()
 
   // Guard
   if (isLoading) {
@@ -72,6 +74,16 @@ export default function AdminPage() {
         >
           <Users size={14} /> {t('admin.users')}
         </button>
+        <button
+          onClick={() => setTab('members')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            tab === 'members'
+              ? 'bg-white text-brand-dark shadow-sm border border-brand-border'
+              : 'text-brand-muted hover:text-brand-dark'
+          }`}
+        >
+          <UserCog size={14} /> {t('admin.members')}
+        </button>
       </div>
 
       {/* Content */}
@@ -85,6 +97,9 @@ export default function AdminPage() {
       )}
       {tab === 'users' && (
         <AdminUserTable progress={progress} loading={pLoading} />
+      )}
+      {tab === 'members' && (
+        <AdminUserList users={users} loading={uLoading} onUpdate={updateUserRole} />
       )}
 
       {showAdd && (

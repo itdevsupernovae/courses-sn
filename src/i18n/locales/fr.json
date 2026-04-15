@@ -62,6 +62,7 @@
     "title": "Panel Administration",
     "courses": "Gestion des cours",
     "users": "Suivi utilisateurs",
+    "members": "Liste des utilisateurs",
     "addCourse": "Ajouter un cours",
     "editCourse": "Modifier le cours",
     "deleteCourse": "Supprimer",
@@ -92,7 +93,8 @@
       "course": "Formation",
       "startedAt": "Démarré le",
       "finishedAt": "Terminé le",
-      "status": "Statut"
+      "status": "Statut",
+      "role": "Rôle"
     },
     "status": {
       "completed": "Terminé",
@@ -100,6 +102,12 @@
       "notStarted": "Non commencé"
     },
     "noUsers": "Aucun utilisateur n'a encore démarré de cours.",
+    "noUsersFound": "Aucun utilisateur trouvé.",
+    "searchUsers": "Rechercher un utilisateur...",
+    "makeAdmin": "Rendre admin",
+    "removeAdmin": "Retirer admin",
+    "userPromotedAdmin": "Utilisateur promu administrateur.",
+    "userDemoted": "Droits admin retirés.",
     "noCourses": "Aucun cours créé pour l'instant.",
     "githubToast": "Le cours ZIP a été envoyé à GitHub. Il sera accessible dans 30 à 60 secondes.",
     "uploadingZip": "Extraction en cours...",

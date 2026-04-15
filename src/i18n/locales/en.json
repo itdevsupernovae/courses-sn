@@ -62,6 +62,7 @@
     "title": "Administration Panel",
     "courses": "Course Management",
     "users": "User Progress",
+    "members": "User List",
     "addCourse": "Add a course",
     "editCourse": "Edit course",
     "deleteCourse": "Delete",
@@ -92,7 +93,8 @@
       "course": "Training",
       "startedAt": "Started",
       "finishedAt": "Finished",
-      "status": "Status"
+      "status": "Status",
+      "role": "Role"
     },
     "status": {
       "completed": "Completed",
@@ -100,6 +102,12 @@
       "notStarted": "Not started"
     },
     "noUsers": "No users have started a course yet.",
+    "noUsersFound": "No users found.",
+    "searchUsers": "Search a user...",
+    "makeAdmin": "Make admin",
+    "removeAdmin": "Remove admin",
+    "userPromotedAdmin": "User promoted to administrator.",
+    "userDemoted": "Admin rights removed.",
     "noCourses": "No courses created yet.",
     "githubToast": "The ZIP course was sent to GitHub. It will be accessible in 30-60 seconds.",
     "uploadingZip": "Extracting files...",
