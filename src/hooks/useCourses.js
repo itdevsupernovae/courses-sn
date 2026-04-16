@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-export function useCourses(typeFilter) {
+export function useCourses(typeFilter, userId) {
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!userId) return
     async function fetch() {
       setLoading(true)
       let query = supabase
@@ -23,7 +24,7 @@ export function useCourses(typeFilter) {
       setLoading(false)
     }
     fetch()
-  }, [typeFilter])
+  }, [typeFilter, userId])
 
   return { courses, loading, setCourses }
 }

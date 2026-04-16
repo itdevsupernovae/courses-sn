@@ -12,7 +12,7 @@ export default function HomePage() {
   const { user, isLoading } = useAuth()
   const [filter, setFilter] = useState('all')
 
-  const { courses, loading: coursesLoading } = useCourses(filter)
+  const { courses, loading: coursesLoading } = useCourses(filter, user?.id)
   const { loading: ucLoading, getCourseStatus, startCourse, finishCourse } = useUserCourses()
 
   if (isLoading) {
