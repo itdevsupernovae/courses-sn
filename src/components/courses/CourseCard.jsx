@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ExternalLink, CheckCircle2, PlayCircle, Loader2 } from 'lucide-react'
+import { CheckCircle2, PlayCircle, Loader2, Download } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { generateDiploma } from '../../lib/pdfDiploma'
 import StartCourseModal from './StartCourseModal'
 import CongratsModal from './CongratsModal'
 
@@ -12,7 +13,7 @@ const TYPE_COLORS = {
 }
 
 export default function CourseCard({ course, getCourseStatus, onStart, onFinish }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { profile } = useAuth()
   const [showStartModal, setShowStartModal] = useState(false)
   const [showCongrats, setShowCongrats] = useState(false)
@@ -92,12 +93,6 @@ export default function CourseCard({ course, getCourseStatus, onStart, onFinish 
           )}
         </div>
 
-        {/* Source type indicator */}
-        <div className="flex items-center gap-1.5 text-xs text-brand-muted">
-          <ExternalLink size={11} />
-          <span>{course.source_type === 'zip' ? 'Archive locale' : 'Lien externe'}</span>
-        </div>
-
         {/* Actions */}
         <div className="flex flex-col gap-2 pt-2 border-t border-brand-border">
           {/* Start button */}
@@ -124,6 +119,23 @@ export default function CourseCard({ course, getCourseStatus, onStart, onFinish 
               ? t('courses.completed')
               : t('courses.finishCourse')}
           </button>
+
+          {/* Download diploma button — only when completed */}
+          {status === 'completed' && profile && record && (
+            <button
+              onClick={() => generateDiploma({
+                courseTitle: course.title,
+                firstName: profile.first_name,
+                lastName: profile.last_name,
+                finishedAt: record.finished_at,
+                lang: i18n.language,
+              })}
+              className="w-full flex items-center justify-center gap-2 text-xs font-medium text-brand-orange hover:text-brand-orange/80 py-1.5 transition-colors"
+            >
+              <Download size={13} />
+              {t('courses.downloadDiploma')}
+            </button>
+          )}
         </div>
       </div>
 
